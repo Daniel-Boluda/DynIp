@@ -1,0 +1,17 @@
+# Ignore .env files
+.env
+.env.*
+
+# Ignore any files with .env in the name
+*.env
+
+# Ignore environment-specific files
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Ignore other common files and directories
+node_modules/
+*.log
+.DS_Store

@@ -1,0 +1,17 @@
+{
+    "name": "Python DynIP Container",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python"
+            ]
+        }
+    },
+    "runArgs": [
+        "--env-file", "${localWorkspaceFolder}/.env"
+    ]
+}
