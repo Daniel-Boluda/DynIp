@@ -31,25 +31,25 @@ The application uses environment variables for configuration. Create a `.env` fi
 To build the Docker image:
 
 ```bash
-docker build -t dynip-container -f .devcontainer/Dockerfile .
+docker build -t dynip -f .devcontainer/Dockerfile .
 ```
 
 ## Running the Container
 
 To run the container:
 ```bash
-docker run --env-file .env dynip-container
+docker run --env-file .env dynip
 ```
 ## Pushing to Docker Hub
 
 To push your image to Docker Hub:
 Tag your image:
 ```bash
-docker tag dynip-container YOUR-DOCKER-HUB-USERNAME/dynip-container:latest
+docker tag dynip bolferdocker/dynip:latest
 ```
 Push the image:
 ```bash
-docker push YOUR-DOCKER-HUB-USERNAME/dynip-container:latest
+docker push bolferdocker/dynip:latest
 ```
 ## Script Details
 

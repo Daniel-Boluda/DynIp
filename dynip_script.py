@@ -8,15 +8,20 @@ from datetime import datetime
 # Configure the logging system to log to stdout
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Environment variables for secrets
+# Environment variables for secrets and domain names
 api_token = os.getenv('API_TOKEN')
 zone_id = os.getenv('ZONE_ID')
+domain_name = os.getenv('DOMAIN_NAME')  # Retrieve domain names from environment variable
+cname_tags_env = os.getenv('CNAME_TAGS')  # Retrieve domain names from environment variable
 sleep_duration = int(os.getenv('SLEEP_DURATION', 30))  # Default to 30 seconds if not set
 
 # Check if the environment variables are set
-if not api_token or not zone_id:
-    logging.error("API_TOKEN or ZONE_ID environment variables are not set.")
+if not api_token or not zone_id or not domain_name:
+    logging.error("API_TOKEN, ZONE_ID, or DOMAIN_NAME environment variables are not set.")
     exit(1)
+
+# Convert the comma-separated cname tags to a list
+cname_tags = cname_tags_env.split(',')
 
 # Global variable to store the last known IP
 last_known_ip = None
@@ -104,7 +109,6 @@ def update_dns_record(api_token, zone_id, record_id, domain_name, new_ip, record
 # Main function to run the script
 def main():
     global last_known_ip
-    domain_name = 'dbcloud.org'
 
     while True:
         # Retrieve external IP
@@ -113,7 +117,11 @@ def main():
             if new_ip != last_known_ip:
                 logging.info(f'{get_current_time()}: IP changed from {last_known_ip} to {new_ip}')
                 create_or_update_dns_record(api_token, zone_id, domain_name, new_ip)
-                create_or_update_dns_record(api_token, zone_id, 'wireguard.dbcloud.org', domain_name, record_type='CNAME')
+                    
+                # Update DNS records for each domain name
+                for cname_tag in cname_tags:
+                    create_or_update_dns_record(api_token, zone_id, cname_tag, domain_name, record_type='CNAME')
+                    
                 last_known_ip = new_ip
             else:
                 logging.info(f'{get_current_time()}: IP unchanged: {new_ip}')
